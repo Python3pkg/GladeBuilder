@@ -31,6 +31,7 @@ import re
 import sys
 
 from datetime import datetime
+import collections
 
 GTK2 = 2
 GTK3 = 3
@@ -101,7 +102,7 @@ class W:
             Show window data.
             :param dict: Dict with widget name and value.
         '''
-        for k, v in dict.items():
+        for k, v in list(dict.items()):
 
             if hasattr(self, k):
                 widget = getattr(self, k)
@@ -210,7 +211,7 @@ class W:
             widget.get_buffer().set_text(v)
 
         else:
-            print('** Warning: Object not supported: ' + widget.__class__.__name__)
+            print(('** Warning: Object not supported: ' + widget.__class__.__name__))
 
     def __get_value(self, widget):
 
@@ -277,7 +278,7 @@ class W:
             return widget.get_buffer().get_text(start, end, True)
 
         else:
-            print('** Warning: Object not supported: ' + widget.__class__.__name__)
+            print(('** Warning: Object not supported: ' + widget.__class__.__name__))
 
     def __is_valid_uri(self, uri):
 
@@ -329,7 +330,7 @@ class GladeWindow:
             if name in ['', 'None']: continue
 
             if hasattr(self.w, name):
-                print('** Warning: Duplicated widget name: %s **' % name)
+                print(('** Warning: Duplicated widget name: %s **' % name))
                 continue
 
             setattr(self.w, name, c)
@@ -371,7 +372,7 @@ class GladeWindow:
             #raise AttributeError('Handler %s not found' % handler_name)
             return
 
-        if not callable(handler):
+        if not isinstance(handler, collections.Callable):
             raise TypeError('Handler %s is not a method or function' % handler_name)
 
         after = flags & GObject.ConnectFlags.AFTER
